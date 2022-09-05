@@ -1,0 +1,20 @@
+on:
+  push:
+    branches:
+    - main
+    paths:
+    - 'content-web/**'
+    - web.deployment.yml  
+    - web.service.yml     
+
+name: Deploy to AKS
+uses: azure/k8s-deploy@v1
+with:
+     manifests: |
+       web.deployment.yml 
+       web.service.yml
+     images: |
+       ${{ env.containerRegistry }}/${{ env.imageRepository }}:${{ env.tag }}
+     imagepullsecrets: |
+       ingress-demo-secret
+     namespace: ingress-demo
